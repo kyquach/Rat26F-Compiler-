@@ -38,6 +38,9 @@ class NFSM:
 
         elif character == "_":
             return "_"
+
+        elif character == ".":
+            return "."
         
         return None
       
