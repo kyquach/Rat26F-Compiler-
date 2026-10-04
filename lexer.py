@@ -23,7 +23,7 @@ class NFSM:
 
         return not active_states.isdisjoint(self.final_states)
 
-   def follow_transitions(self, current_states, character_type):
+    def follow_transitions(self, current_states, character_type):
         destination_states = set()
         for current_state in current_states:
             key = (current_state, character_type)
@@ -38,7 +38,7 @@ class NFSM:
         return None
       
 
-    def find_epsilon_(self, starting_states):
+    def find_epsilon_reachable(self, starting_states):
         epsilon = set(starting_states)
         pending_states = list(starting_states)
 
@@ -47,7 +47,7 @@ class NFSM:
             epsilon_targets = self.transition_table.get((current_state, None), set())
 
             for target_state in epsilon_targets:
-                if target_state not in reachable:
+                if target_state not in epsilon:
                     epsilon.add(target_state)
                     pending_states.append(target_state)
 
