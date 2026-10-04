@@ -1,4 +1,4 @@
-class NFSM:
+class lexer:
     def __init__(self, states, alphabet, transition_states, starting_state, accepted_states):
         self.transition_table = transition_states
         self.initial_state = starting_state
