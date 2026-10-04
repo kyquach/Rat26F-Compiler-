@@ -1,3 +1,5 @@
+from lexer import NFSM
+
 class TestCases:
     """
     Test cases for the Rat26F Lexer FSMs.
@@ -14,5 +16,8 @@ class TestCases:
         self.identifier_fsm = identifier_fsm
         self.integer_fsm = integer_fsm
         self.real_fsm = real_fsm
+
+
+
 
     
