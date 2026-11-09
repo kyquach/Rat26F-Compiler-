@@ -1,7 +1,8 @@
 import sys
 
-from test_cases import TestCases
 from lexer import Lexer
+from Syntax_analyzer import SyntaxAnalyzer
+
 
 def main():
     # Input and output files (optional command-line arguments)
@@ -12,20 +13,17 @@ def main():
     with open(input_file, "r") as file:
         source_code = file.read()
 
-    # Create lexer
+    # Get the lexer from Assignment 1
     lexer = Lexer(source_code)
 
-    # open output file for writing results
+    # The parser writes each token, lexeme and production rule to the output file
     with open(output_file, "w") as file:
+        success = SyntaxAnalyzer(lexer, file, print_rules=True).parse()
 
-        # generating tokens using the lexer
-        tokens = lexer.tokenize()
-
-        # printing tokens and lexemes to the output file
-        for token, lexeme in tokens:
-            file.write(f"Token: {token:<20} Lexeme: {lexeme}\n")
-
-    print(f"Lexing complete. Results written to {output_file}")
+    if success:
+        print(f"Parsing complete. Results written to {output_file}")
+    else:
+        print(f"Syntax error found. See {output_file}")
 
 
 if __name__ == "__main__":
