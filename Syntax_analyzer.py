@@ -187,48 +187,127 @@ class SyntaxAnalyzer:
     # Part 2: statements
 
     def parse_statement_list(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Statement List> -> <Statement> <Statement List Prime>")
+        self.parse_statement()
+        self.parse_statement_list_prime()
+ 
+    def parse_statement_list_prime(self):
+        if self.is_statement_start():
+            self.print_rule("<Statement List Prime> -> <Statement List>")
+            self.parse_statement_list()
+        else:
+            self.print_rule("<Statement List Prime> -> ε")
+ 
     def parse_statement(self):
-        # yall implement this part when you do your part
-        pass
-
+        if self.check("{"):
+            self.print_rule("<Statement> -> <Compound>")
+            self.parse_compound()
+        elif self.check_type("identifier"):
+            self.print_rule("<Statement> -> <Assign>")
+            self.parse_assign()
+        elif self.check("if"):
+            self.print_rule("<Statement> -> <If>")
+            self.parse_if()
+        elif self.check("return"):
+            self.print_rule("<Statement> -> <Return>")
+            self.parse_return()
+        elif self.check("put"):
+            self.print_rule("<Statement> -> <Print>")
+            self.parse_print()
+        elif self.check("get"):
+            self.print_rule("<Statement> -> <Scan>")
+            self.parse_scan()
+        elif self.check("while"):
+            self.print_rule("<Statement> -> <While>")
+            self.parse_while()
+        else:
+            self.error("a statement")
+ 
     def parse_compound(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Compound> -> { <Statement List> }")
+        self.match("{")
+        self.parse_statement_list()
+        self.match("}")
+ 
     def parse_assign(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Assign> -> <Identifier> = <Expression> ;")
+        self.match_type("identifier")
+        self.match("=")
+        self.parse_expression()
+        self.match(";")
+ 
     def parse_if(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<If> -> if ( <Condition> ) <Statement> <If Prime>")
+        self.match("if")
+        self.match("(")
+        self.parse_condition()
+        self.match(")")
+        self.parse_statement()
+        self.parse_if_prime()
+ 
+    def parse_if_prime(self):
+        if self.check("fi"):
+            self.print_rule("<If Prime> -> fi")
+            self.match("fi")
+        elif self.check("else"):
+            self.print_rule("<If Prime> -> else <Statement> fi")
+            self.match("else")
+            self.parse_statement()
+            self.match("fi")
+        else:
+            self.error("'fi' or 'else'")
+ 
     def parse_return(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Return> -> return <Return Prime>")
+        self.match("return")
+        self.parse_return_prime()
+ 
+    def parse_return_prime(self):
+        if self.check(";"):
+            self.print_rule("<Return Prime> -> ;")
+            self.match(";")
+        else:
+            self.print_rule("<Return Prime> -> <Expression> ;")
+            self.parse_expression()
+            self.match(";")
+ 
     def parse_print(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Print> -> put ( <Expression> ) ;")
+        self.match("put")
+        self.match("(")
+        self.parse_expression()
+        self.match(")")
+        self.match(";")
+ 
     def parse_scan(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Scan> -> get ( <IDs> ) ;")
+        self.match("get")
+        self.match("(")
+        self.parse_ids()
+        self.match(")")
+        self.match(";")
+ 
     def parse_while(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<While> -> while ( <Condition> ) <Statement>")
+        self.match("while")
+        self.match("(")
+        self.parse_condition()
+        self.match(")")
+        self.parse_statement()
+ 
     def parse_condition(self):
-        # yall implement this part when you do your part
-        pass
-
+        self.print_rule("<Condition> -> <Expression> <Relop> <Expression>")
+        self.parse_expression()
+        self.parse_relop()
+        self.parse_expression()
+ 
     def parse_relop(self):
-        # yall implement this part when you do your part
-        pass
+        for op in ("==", "!=", ">", "<", "<=", ">="):
+            if self.check(op):
+                self.print_rule(f"<Relop> -> {op}")
+                self.next_token()
+                return
+        self.error("a relational operator (==, !=, >, <, <=, >=)")
 
     # Part 3: expressions
 
