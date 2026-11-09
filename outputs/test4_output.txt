@@ -1,0 +1,22 @@
+Token: separator            Lexeme: @
+     <Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> <Statement List> @
+     <Opt Function Definitions> -> <Empty>
+     <Empty> -> ε
+Token: keyword              Lexeme: integer
+     <Opt Declaration List> -> <Declaration List>
+     <Declaration List> -> <Declaration> ; <Declaration List Prime>
+     <Declaration> -> <Qualifier> <IDs>
+     <Qualifier> -> integer
+Token: identifier           Lexeme: a
+     <IDs> -> <Identifier> <IDs Prime>
+Token: separator            Lexeme: ,
+     <IDs Prime> -> , <IDs>
+Token: identifier           Lexeme: b
+     <IDs> -> <Identifier> <IDs Prime>
+Token: separator            Lexeme: ;
+     <IDs Prime> -> ε
+Token: separator            Lexeme: @
+     <Declaration List Prime> -> ε
+     <Statement List> -> <Statement> <Statement List Prime>
+
+Syntax error on line 5: expected a statement, but found separator '@'

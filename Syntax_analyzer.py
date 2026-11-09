@@ -63,15 +63,17 @@ class SyntaxAnalyzer:
 
     # Part 1: program structure, functions and declarations
 
+
     def parse_rat26f(self):
-        self.print_rule("<Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> <Statement List> @")
+        self.print_rule("<Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> @ <Statement List>")
         self.parse_opt_function_definitions()
         self.match("@")
         self.parse_opt_declaration_list()
-        self.parse_statement_list()
         self.match("@")
+        self.parse_statement_list()
         if self.current_token is not None:
             self.error("end of file")
+            
 
     def parse_opt_function_definitions(self):
         if self.check("function"):
@@ -185,6 +187,10 @@ class SyntaxAnalyzer:
         self.print_rule("<Empty> -> ε")
 
     # Part 2: statements
+    def is_statement_start(self):
+        if self.check_type("identifier") or self.check("{"):
+            return True
+        return any(self.check(k) for k in ("if", "return", "put", "get", "while"))
 
     def parse_statement_list(self):
         self.print_rule("<Statement List> -> <Statement> <Statement List Prime>")
@@ -348,6 +354,15 @@ class SyntaxAnalyzer:
         else:
             self.print_rule("<Factor> -> <Primary>")
         self.parse_primary()
+
+    def parse_primary_prime(self):
+        if self.check("("):
+            self.print_rule("<Primary Prime> -> ( <IDs> )")
+            self.match("(")
+            self.parse_ids()
+            self.match(")")
+        else:
+            self.print_rule("<Primary Prime> -> ε")
 
     def parse_primary(self):
         if self.check_type("identifier"):

@@ -10,14 +10,14 @@ def main():
     output_file = sys.argv[2] if len(sys.argv) > 2 else "output.txt"
 
     # Read source code from input file
-    with open(input_file, "r") as file:
+    with open(input_file, "r", encoding="utf-8") as file:
         source_code = file.read()
 
     # Get the lexer from Assignment 1
     lexer = Lexer(source_code)
 
     # The parser writes each token, lexeme and production rule to the output file
-    with open(output_file, "w") as file:
+    with open(output_file, "w", encoding="utf-8") as file:
         success = SyntaxAnalyzer(lexer, file, print_rules=True).parse()
 
     if success:
