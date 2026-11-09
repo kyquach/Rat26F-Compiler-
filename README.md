@@ -24,6 +24,7 @@ Identifiers, integers and reals are recognized with finite state machines:
 | File             | Purpose                                                    |
 |------------------|------------------------------------------------------------|
 | `main.py`        | Reads the source file, runs the lexer, writes the output   |
+| `syntax_analyzer.py` | A parser reads tokens from lexer, showing productions and outputting them   |
 | `lexer.py`       | The three state machines and the `Lexer` class             |
 | `NFSM.py`        | Nondeterministic finite state machine simulator            |
 | `test_cases.py`  | Checks for the state machines and the lexer                |
