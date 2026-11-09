@@ -312,17 +312,63 @@ class SyntaxAnalyzer:
     # Part 3: expressions
 
     def parse_expression(self):
-        # yall implement this part when you do your part
-        pass
+        self.print_rule("<Expression> -> <Term> <Expression Prime>")
+        self.parse_term()
+        self.parse_expression_prime()
+
+    def parse_expression_prime(self):
+        if self.check("+") or self.check("-"):
+            op = self.current_token.lexeme
+            self.print_rule(f"<Expression Prime> -> {op} <Term> <Expression Prime>")
+            self.next_token()
+            self.parse_term()
+            self.parse_expression_prime()
+        else:
+            self.print_rule("<Expression Prime> -> ε")
 
     def parse_term(self):
-        # yall implement this part when you do your part
-        pass
+        self.print_rule("<Term> -> <Factor> <Term Prime>")
+        self.parse_factor()
+        self.parse_term_prime()
+
+    def parse_term_prime(self):
+        if self.check("*") or self.check("/"):
+            op = self.current_token.lexeme
+            self.print_rule(f"<Term Prime> -> {op} <Factor> <Term Prime>")
+            self.next_token()
+            self.parse_factor()
+            self.parse_term_prime()
+        else:
+            self.print_rule("<Term Prime> -> ε")
 
     def parse_factor(self):
-        # yall implement this part when you do your part
-        pass
+        if self.check("-"):
+            self.print_rule("<Factor> -> - <Primary>")
+            self.match("-")
+        else:
+            self.print_rule("<Factor> -> <Primary>")
+        self.parse_primary()
 
     def parse_primary(self):
-        # yall implement this part when you do your part
-        pass
+        if self.check_type("identifier"):
+            self.print_rule("<Primary> -> <Identifier> <Primary Prime>")
+            self.next_token()
+            self.parse_primary_prime()
+        elif self.check_type("integer"):
+            self.print_rule("<Primary> -> <Integer>")
+            self.next_token()
+        elif self.check_type("real"):
+            self.print_rule("<Primary> -> <Real>")
+            self.next_token()
+        elif self.check("("):
+            self.print_rule("<Primary> -> ( <Expression> )")
+            self.match("(")
+            self.parse_expression()
+            self.match(")")
+        elif self.check("true") or self.check("false"):
+            self.print_rule(f"<Primary> -> {self.current_token.lexeme.lower()}")
+            self.next_token()
+        else:
+            self.error("identifier, integer, real, '(', 'true' or 'false'")
+
+    
